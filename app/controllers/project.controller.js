@@ -1,3 +1,4 @@
+import { json } from "express";
 import { projectTable } from "../models/project.model.js";
 
 const projectCreate = (req, res) => {
@@ -17,7 +18,6 @@ const projectCreate = (req, res) => {
     res.status(201).json(data);
   });
 };
-
 const getAllProject = (req, res) => {
   projectTable.get((err, data) => {
     if (err) {
@@ -26,7 +26,6 @@ const getAllProject = (req, res) => {
     res.status(201).json(data);
   });
 };
-
 const deleteById = (req, res) => {
   if (!req.params.id) {
     return res.status(404).json({ message: "Give a proper id" });
@@ -38,5 +37,44 @@ const deleteById = (req, res) => {
     res.status(201).json(data);
   });
 };
+const projectUpdateById = (req, res) => {
+  if (!req.params.id && !req.body) {
+    return res.status(404).json({ message: "PLZ PROVIDE A ID" });
+  }
+  let projectId = req.params.id;
+  projectTable.updateById(projectId, req.body, (err, data) => {
+    if (err) {
+      return res.status(404).json({ message: "ALL FIELD REQUIRED" });
+    }
+    res.status(201).json(data);
+  });
+};
+const getById = (req, res) => {
+  if (!req.params.id) {
+    return res.status(404).json({ messgae: "Put a Id" });
+  }
+  let projectId = req.params.id;
+  projectTable.getById(projectId, (err, data) => {
+    if (err) {
+      return res.status(401).json({ MESSAGE: err.message });
+    }
+    res.status(201).json(data);
+  });
+};
+const deleteAll = (req, res) => {
+  projectTable.deleteAll((err, data) => {
+    if (err) {
+      return res.status(404).json(err);
+    }
+    res.status(201).json(data);
+  });
+};
 
-export { projectCreate, getAllProject, deleteById };
+export {
+  projectCreate,
+  getAllProject,
+  deleteById,
+  projectUpdateById,
+  getById,
+  deleteAll,
+};

@@ -44,7 +44,53 @@ const projectTable = {
     }
   },
   updateById: async (id, newproject, result) => {
-    let sqlQuery = `UPDATE projectTable SET ()`;
+    let sqlQuery = `UPDATE projectTable SET name = ? , is_favorite = ? , colour = ? WHERE id = ?`;
+    try {
+      let db = await myDataDb();
+      let response = await db.run(sqlQuery, [
+        newproject.name,
+        newproject.is_favorite,
+        newproject.colour,
+        id,
+      ]);
+
+      if (response.changes === 0) {
+        return result({ message: "No project found with this ID" }, null);
+      }
+      let updatedProject = await db.get(
+        `SELECT * FROM projectTable WHERE id = ?`,
+        [id]
+      );
+      result(null, updatedProject);
+    } catch (error) {
+      result(error, null);
+    }
+  },
+  getById: async (id, result) => {
+    let sqlQuery = `SELECT * FROM projectTable WHERE id = ?`;
+    try {
+      let db = await myDataDb();
+      let response = await db.get(sqlQuery, [id]);
+      if (!response) {
+        return result({ message: "This ID not exist" }, null);
+      }
+      result(null, response);
+    } catch (error) {
+      result(error, null);
+    }
+  },
+  deleteAll: async (result) => {
+    let sqlQuery = `DELETE FROM projectTable`;
+    try {
+      let db = await myDataDb();
+      let { changes } = await db.run(sqlQuery, []);
+      if (changes == 0) {
+        return result({ result: "Data not deleted" }, null);
+      }
+      result(null, changes);
+    } catch (error) {
+      result(error, null);
+    }
   },
 };
 
