@@ -1,3 +1,4 @@
+import { myDataDb } from "../dataBaseConfig/db.config.js";
 import { taskTable } from "../models/task.model.js";
 
 const createTask = (req, res) => {
@@ -50,12 +51,16 @@ const updateTaskById = (req, res) => {
   });
 };
 
-const completedTask = (req, res) => {
-  taskTable.completedTask((err, data) => {
+const combineQuery = (req, res) => {
+  if (!req.query) {
+    return res.status(404).json({ message: "Query not found" });
+  }
+  let query = req.query;
+  taskTable.combineQuery(query, (err, data) => {
     if (err) {
-      return res.status(404).json(err);
+      return res.status(404).json({ message: err.message });
     }
-    return res.status(201).json(data);
+    res.status(201).json(data);
   });
 };
 
@@ -64,5 +69,5 @@ export {
   getAllTask,
   deleteAllTaskById,
   updateTaskById,
-  completedTask,
+  combineQuery,
 };

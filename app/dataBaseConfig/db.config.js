@@ -1,6 +1,8 @@
 import sqlite3 from "sqlite3";
 import * as sqlite from "sqlite";
 import path from "path";
+import { insertUsers } from "./userCreation.js";
+import { projectCreate } from "./projectCreation.js";
 const dbPath = path.resolve("./app/dataBaseConfig/mydata.db");
 let dbInstance = null;
 async function connectDb() {
@@ -14,6 +16,7 @@ async function connectDb() {
   });
   console.log("Connected to the Database");
   await dbInstance.exec("PRAGMA foreign_keys = ON;");
+  // await dbInstance.exec("PRAGMA max_variable_number = 10000;");
   return dbInstance;
 }
 let taskTable = `
@@ -22,7 +25,7 @@ CREATE TABLE IF NOT EXISTS taskTable (
   content VARCHAR(256) NOT NULL,
   description VARCHAR(256) NOT NULL,
   is_completed BOOLEAN DEFAULT FALSE,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  created_at  DATE DEFAULT (DATE('now')),
   project_id INTEGER NOT NULL,
   due_date VARCHAR(256) NOT NULL,
   FOREIGN KEY (project_id) REFERENCES projectTable(id) ON DELETE CASCADE 
@@ -33,14 +36,38 @@ CREATE TABLE IF NOT EXISTS projectTable (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR(256) NOT NULL,
   is_favorite BOOLEAN DEFAULT FALSE,
-  colour VARCHAR(256)
+  colour VARCHAR(256),
+  user_id INTEGER ,
+  FOREIGN KEY (user_id) REFERENCES userTable(id) ON DELETE CASCADE
+)
+`;
+let userTable = `
+CREATE TABLE IF NOT EXISTS userTable(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT UNIQUE NOT NULL,
+email TEXT UNIQUE NOT NULL
+)
+`;
+let commentTable = `
+CREATE TABLE IF NOT EXISTS commentTable (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+comment TEXT ,
+posted_at DATE DEFAULT (DATE('now')),
+project_id INTEGER NOT NULL,
+task_id INTEGER NOT NULL,
+FOREIGN KEY (project_id) REFERENCES projectTable(id) ON DELETE CASCADE
+FOREIGN KEY (task_id) REFERENCES taskTable(id) ON DELETE CASCADE
 )
 `;
 async function createTable(db) {
   try {
+    await db.exec(userTable);
+    console.log("User table created");
+    await db.exec(commentTable);
     await db.exec(projectTable);
     await db.exec(taskTable);
-    console.log("Tables Created");
+    await insertUsers(db, 1000);
+    await projectCreate(db, 10000000, 1500);
   } catch (error) {
     console.error("Error in table creation:", error);
   }
@@ -59,6 +86,5 @@ async function myDataDb() {
     console.error("Database connection failed:", error);
   }
 }
-// checkDbStatus();
-myDataDb();
+// myDataDb();
 export { myDataDb, connectDb };
