@@ -50,17 +50,31 @@ const projectTable = {
       result(error, null);
     }
   },
-  updateById: async (id, newproject, result) => {
-    let sqlQuery = `UPDATE projectTable SET name = ? , is_favorite = ? , colour = ? WHERE id = ?`;
+  updateById: async (id, newProject, result) => {
     try {
       let db = await connectDb();
-      let response = await db.run(sqlQuery, [
-        newproject.name,
-        newproject.is_favorite,
-        newproject.colour,
-        id,
-      ]);
-
+      let fields = [];
+      let values = [];
+      if (newProject.name !== undefined) {
+        fields.push("name = ?");
+        values.push(newProject.name);
+      }
+      if (newProject.is_favorite !== undefined) {
+        fields.push("is_favorite = ?");
+        values.push(newProject.is_favorite);
+      }
+      if (newProject.colour !== undefined) {
+        fields.push("colour = ?");
+        values.push(newProject.colour);
+      }
+      if (fields.length === 0) {
+        return result({ message: "No valid fields to update" }, null);
+      }
+      values.push(id);
+      let sqlQuery = `UPDATE projectTable SET ${fields.join(
+        ", "
+      )} WHERE id = ?`;
+      let response = await db.run(sqlQuery, values);
       if (response.changes === 0) {
         return result({ message: "No project found with this ID" }, null);
       }

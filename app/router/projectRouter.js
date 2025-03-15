@@ -11,9 +11,9 @@ import {
 
 projectRouter.get("/", getAllProject);
 projectRouter.post("/", projectCreate);
-projectRouter.get("/id/:id", getById);
-projectRouter.patch("/projectById/:id", projectUpdateById);
-projectRouter.delete("/delete/:id", deleteById);
-projectRouter.delete("/deleteall/", deleteAll);
+projectRouter.get("/:id", getById);
+projectRouter.patch("/:id", projectUpdateById);
+projectRouter.delete("/:id", deleteById);
+projectRouter.delete("/", deleteAll);
 
 export { projectRouter };

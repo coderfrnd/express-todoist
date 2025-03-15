@@ -1,3 +1,8 @@
-node_modules/
+
+mydata.db
+
+
 .env
-.mydata.db
+
+
+node_modules/

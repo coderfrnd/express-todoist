@@ -44,15 +44,24 @@ const deleteById = (req, res) => {
   });
 };
 const projectUpdateById = (req, res) => {
-  if (!req.params.id && !req.body) {
-    return res.status(404).json({ message: "PLZ PROVIDE A ID" });
+  const projectId = req.params.id;
+  const updates = req.body;
+
+  if (!projectId) {
+    return res.status(400).json({ message: "PLZ PROVIDE AN ID" });
   }
-  let projectId = req.params.id;
-  projectTable.updateById(projectId, req.body, (err, data) => {
+
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ message: "NO FIELDS TO UPDATE" });
+  }
+
+  projectTable.updateById(projectId, updates, (err, data) => {
     if (err) {
-      return res.status(404).json({ message: "ALL FIELD REQUIRED" });
+      return res
+        .status(400)
+        .json({ message: err.message || "ERROR UPDATING PROJECT" });
     }
-    res.status(201).json(data);
+    res.status(200).json(data);
   });
 };
 const getById = (req, res) => {
