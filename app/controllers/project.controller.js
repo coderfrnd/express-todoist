@@ -21,7 +21,7 @@ const getAllProject = (req, res) => {
   let pageNum = 0;
   console.log(req.query);
 
-  if (req.query) {
+  if (req.query.num) {
     pageNum = req.query.num;
     pageNum = Number(pageNum);
   }

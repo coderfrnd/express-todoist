@@ -30,7 +30,6 @@ const projectTable = {
         currentPage: n,
         projects: response,
       };
-      // response.unshift(aboutPage);
       result(null, aboutPage);
     } catch (error) {
       console.log("Error in selecting all project", error);

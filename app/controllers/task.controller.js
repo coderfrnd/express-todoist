@@ -15,7 +15,12 @@ const createTask = (req, res) => {
 };
 
 const getAllTask = (req, res) => {
-  taskTable.getAllTask((err, data) => {
+  let pageNum = 0;
+  if (req.query.num) {
+    pageNum = req.query.num;
+    pageNum = Number(pageNum);
+  }
+  taskTable.getAllTask(pageNum, (err, data) => {
     if (err) {
       return res.status(404).json({ message: err.message });
     }
@@ -55,8 +60,15 @@ const combineQuery = (req, res) => {
   if (!req.query) {
     return res.status(404).json({ message: "Query not found" });
   }
+  let totalNum = 0;
   let query = req.query;
-  taskTable.combineQuery(query, (err, data) => {
+  if (req.query.num) {
+    totalNum = req.query.num;
+    totalNum = Number(totalNum);
+  }
+  console.log(totalNum);
+
+  taskTable.combineQuery(query, totalNum, (err, data) => {
     if (err) {
       return res.status(404).json({ message: err.message });
     }

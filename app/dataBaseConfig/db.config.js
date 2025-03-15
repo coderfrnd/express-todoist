@@ -3,6 +3,7 @@ import * as sqlite from "sqlite";
 import path from "path";
 import { insertUsers } from "./userCreation.js";
 import { projectCreate } from "./projectCreation.js";
+import { taskCreation } from "./taskCreation.js";
 const dbPath = path.resolve("./app/dataBaseConfig/mydata.db");
 let dbInstance = null;
 async function connectDb() {
@@ -48,6 +49,7 @@ name TEXT UNIQUE NOT NULL,
 email TEXT UNIQUE NOT NULL
 )
 `;
+// taskCreation
 let commentTable = `
 CREATE TABLE IF NOT EXISTS commentTable (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,7 +69,8 @@ async function createTable(db) {
     await db.exec(projectTable);
     await db.exec(taskTable);
     await insertUsers(db, 1000);
-    await projectCreate(db, 10000000, 1500);
+    await projectCreate(db, 1000000, 1500);
+    await taskCreation(db, 10000000, 1500);
   } catch (error) {
     console.error("Error in table creation:", error);
   }

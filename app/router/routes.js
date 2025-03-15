@@ -19,7 +19,7 @@ import {
 router.post("/project", projectCreate);
 router.get("/project/", getAllProject);
 router.post("/task", createTask);
-router.get("/task/:task", getAllTask);
+router.get("/task", getAllTask);
 router.delete("/project/delete/:id", deleteById);
 router.post("/project/update/:id", projectUpdateById);
 router.get("/project/id/:id", getById);
