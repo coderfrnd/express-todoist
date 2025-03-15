@@ -1,4 +1,3 @@
-import { json } from "express";
 import { projectTable } from "../models/project.model.js";
 
 const projectCreate = (req, res) => {
@@ -19,7 +18,14 @@ const projectCreate = (req, res) => {
   });
 };
 const getAllProject = (req, res) => {
-  projectTable.get((err, data) => {
+  let pageNum = 0;
+  console.log(req.query);
+
+  if (req.query) {
+    pageNum = req.query.num;
+    pageNum = Number(pageNum);
+  }
+  projectTable.get(pageNum, (err, data) => {
     if (err) {
       return res.status(404).json({ message: err.message });
     }

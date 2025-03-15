@@ -1,4 +1,4 @@
-import { connectDb, myDataDb } from "../dataBaseConfig/db.config.js";
+import { connectDb } from "../dataBaseConfig/db.config.js";
 const projectTable = {
   create: async (project, result) => {
     let sqlQuery = `INSERT INTO projectTable (name,is_favorite,colour) VALUES(?,?,?)`;
@@ -17,22 +17,30 @@ const projectTable = {
       result(error, null);
     }
   },
-  get: async (result) => {
-    let sqlQuery = `SELECT * FROM projectTable`;
+  get: async (n, result) => {
+    let sqlQuery = `SELECT * FROM projectTable LIMIT 1000 OFFSET ?`;
     try {
-      let db = await myDataDb();
-      let response = await db.all(sqlQuery, []);
-      // console.log(response, "heelo");
-      result(null, response);
+      let db = await connectDb();
+      let response = await db.all(sqlQuery, [n * 1000]);
+      let pageCount = await db.get(`SELECT Count(*) as num from projectTable`);
+      let totalPage = pageCount.num;
+      totalPage = totalPage / 1000;
+      let aboutPage = {
+        "total-page": totalPage,
+        currentPage: n,
+        projects: response,
+      };
+      // response.unshift(aboutPage);
+      result(null, aboutPage);
     } catch (error) {
-      console.log("Error in selecting all project", err);
+      console.log("Error in selecting all project", error);
       result(error, null);
     }
   },
   deleteId: async (id, result) => {
     let sqlQuery = `DELETE FROM projectTable WHERE id = ?`;
     try {
-      let db = await myDataDb();
+      let db = await connectDb();
       let { changes } = await db.run(sqlQuery, [id]);
       if (changes > 0) {
         console.log("Deleted Successfully");
@@ -46,7 +54,7 @@ const projectTable = {
   updateById: async (id, newproject, result) => {
     let sqlQuery = `UPDATE projectTable SET name = ? , is_favorite = ? , colour = ? WHERE id = ?`;
     try {
-      let db = await myDataDb();
+      let db = await connectDb();
       let response = await db.run(sqlQuery, [
         newproject.name,
         newproject.is_favorite,
@@ -69,7 +77,7 @@ const projectTable = {
   getById: async (id, result) => {
     let sqlQuery = `SELECT * FROM projectTable WHERE id = ?`;
     try {
-      let db = await myDataDb();
+      let db = await connectDb();
       let response = await db.get(sqlQuery, [id]);
       if (!response) {
         return result({ message: "This ID not exist" }, null);
@@ -82,7 +90,7 @@ const projectTable = {
   deleteAll: async (result) => {
     let sqlQuery = `DELETE FROM projectTable`;
     try {
-      let db = await myDataDb();
+      let db = await connectDb();
       let { changes } = await db.run(sqlQuery, []);
       if (changes == 0) {
         return result({ result: "Data not deleted" }, null);
