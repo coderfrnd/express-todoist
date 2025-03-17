@@ -46,15 +46,12 @@ const deleteById = (req, res) => {
 const projectUpdateById = (req, res) => {
   const projectId = req.params.id;
   const updates = req.body;
-
   if (!projectId) {
     return res.status(400).json({ message: "PLZ PROVIDE AN ID" });
   }
-
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({ message: "NO FIELDS TO UPDATE" });
   }
-
   projectTable.updateById(projectId, updates, (err, data) => {
     if (err) {
       return res

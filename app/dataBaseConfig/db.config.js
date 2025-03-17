@@ -4,6 +4,7 @@ import path from "path";
 import { insertUsers } from "./userCreation.js";
 import { projectCreate } from "./projectCreation.js";
 import { taskCreation } from "./taskCreation.js";
+import { commentCreation } from "./commentCreation.js";
 const dbPath = path.resolve("./app/dataBaseConfig/mydata.db");
 let dbInstance = null;
 async function connectDb() {
@@ -53,11 +54,11 @@ email TEXT UNIQUE NOT NULL
 let commentTable = `
 CREATE TABLE IF NOT EXISTS commentTable (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-comment TEXT ,
+comment TEXT NOT NULL ,
 posted_at DATE DEFAULT (DATE('now')),
-project_id INTEGER NOT NULL,
-task_id INTEGER NOT NULL,
-FOREIGN KEY (project_id) REFERENCES projectTable(id) ON DELETE CASCADE
+project_id INTEGER ,
+task_id INTEGER ,
+FOREIGN KEY (project_id) REFERENCES projectTable(id) ON DELETE CASCADE,
 FOREIGN KEY (task_id) REFERENCES taskTable(id) ON DELETE CASCADE
 )
 `;
@@ -71,6 +72,7 @@ async function createTable(db) {
     await insertUsers(db, 1000);
     await projectCreate(db, 1000000, 1500);
     await taskCreation(db, 10000000, 1500);
+    await commentCreation(db, 10000000, 1500);
   } catch (error) {
     console.error("Error in table creation:", error);
   }

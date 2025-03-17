@@ -4,6 +4,7 @@ import { connectDb } from "./app/dataBaseConfig/db.config.js";
 import { taskRouter } from "./app/router/taskRouter.js";
 import { projectRouter } from "./app/router/projectRouter.js";
 import { userRouter } from "./app/router/userRoutes.js";
+import { commentRouter } from "./app/router/commentRouter.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/task", taskRouter);
 app.use("/project", projectRouter);
 app.use("/user", userRouter);
+app.use("/comment", commentRouter);
 app.listen(port, () => {
   console.log("Port is running on", port);
 });

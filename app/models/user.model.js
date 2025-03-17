@@ -21,7 +21,7 @@ const userTable = {
       return error;
     }
   },
-  getById: async (query) => {
+  getByEmailNameId: async (query) => {
     try {
       let db = await connectDb();
       let { name, id, email } = query;
@@ -36,11 +36,37 @@ const userTable = {
         parms.push(id);
       }
       if (email) {
-        sqlQuery += `AND email = ?`;
+        sqlQuery += ` AND email = ?`;
         parms.push(email);
       }
       let response = await db.get(sqlQuery, parms);
       return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  deleteById: async (id) => {
+    let sqlQuery = `DELETE FROM userTable WHERE id = ?`;
+    try {
+      let db = await connectDb();
+      let response = await db.run(sqlQuery, [id]);
+      if (response.changes === 0) {
+        return { success: false, msg: "User not found" };
+      }
+      return { success: true, msg: "User deleted successfully" };
+    } catch (error) {
+      return { error: error.message };
+    }
+  },
+  createUser: async (name, email) => {
+    try {
+      let db = await connectDb();
+      let sqlQuery = `INSERT INTO userTable (name,email) VALUES(?,?)`;
+      let response = await db.run(sqlQuery, [name, email]);
+      if (response.changes == 0) {
+        return { msg: "Input is not permitted" };
+      }
+      return { msg: "Your Input done", id: response.lastID };
     } catch (error) {
       return error;
     }

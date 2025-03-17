@@ -29,12 +29,9 @@ const taskCreation = async (db, numOfTask, batchSize) => {
         ","
       )}`;
       await db.run(sqlQuery, params);
-      let end = performance.now();
-      console.log(
-        `INSERTED TASK ${numOfTask} DATA SUCCESSFULLY IN`,
-        end - start
-      );
     }
+    let end = performance.now();
+    console.log(`INSERTED TASK ${numOfTask} DATA SUCCESSFULLY IN`, end - start);
     await db.run("COMMIT");
   } catch (error) {
     await db.run("ROLLBACK");
