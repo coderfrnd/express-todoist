@@ -11,4 +11,5 @@ userRouter.get("/", getAllUser);
 userRouter.get("/any", getUserByIdNameEmail);
 userRouter.post("/create", createUser);
 userRouter.delete("/delete/:id", deleteById);
+// userRouter
 export { userRouter };

@@ -14,13 +14,13 @@ const getAllComments = async (req, res) => {
 };
 
 const getCommentById = async (req, res) => {
-  if (!req.query.id) {
+  if (!req.params.id) {
     return res
       .status(400)
       .json({ message: "Please provide a valid comment ID" });
   }
   try {
-    let response = await commentTable.getById(req.query.id);
+    let response = await commentTable.getById(req.params.id);
     if (!response) {
       return res.status(404).json({ message: "Comment not found" });
     }
@@ -37,6 +37,7 @@ const getCommentsByProjectId = async (req, res) => {
       .json({ message: "Please provide a valid project ID" });
   }
   try {
+    console.log(req.query.projectid);
     let response = await commentTable.getByProjectId(req.query.projectid);
     res.status(200).json(response);
   } catch (error) {

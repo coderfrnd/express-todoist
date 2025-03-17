@@ -45,15 +45,13 @@ const deleteById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  if (!req.query.email || !req.query.name) {
-    res
-      .status(404)
-      .json({ msg: "Plz Enter your email and name both field required" });
+  const { name, email } = req.body;
+
+  if (!email || !name) {
+    return res.status(400).json({ msg: "Both name and email are required" });
   }
   try {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    let name = req.query.name;
-    let email = req.query.email;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: "Invalid email format" });
     }

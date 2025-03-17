@@ -72,7 +72,7 @@ async function createTable(db) {
     await insertUsers(db, 1000);
     await projectCreate(db, 1000000, 1500);
     await taskCreation(db, 10000000, 1500);
-    await commentCreation(db, 10000000, 1500);
+    await commentCreation(db, 1000, 1500);
   } catch (error) {
     console.error("Error in table creation:", error);
   }

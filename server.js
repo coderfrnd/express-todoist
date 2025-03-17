@@ -15,6 +15,9 @@ app.use("/task", taskRouter);
 app.use("/project", projectRouter);
 app.use("/user", userRouter);
 app.use("/comment", commentRouter);
+app.use("/", (req, res) => {
+  res.status(404).json({ msg: "Page Not Found" });
+});
 app.listen(port, () => {
   console.log("Port is running on", port);
 });

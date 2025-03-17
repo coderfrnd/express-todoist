@@ -11,7 +11,6 @@ import {
 const commentRouter = express.Router();
 
 commentRouter.get("/", getAllComments);
-commentRouter.get("/by-id", getCommentById);
 commentRouter.get("/project", getCommentsByProjectId);
 commentRouter.get("/task", getCommentsByTaskId);
 commentRouter.post("/create", createComment);

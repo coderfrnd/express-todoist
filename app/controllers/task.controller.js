@@ -1,4 +1,3 @@
-import { myDataDb } from "../dataBaseConfig/db.config.js";
 import { taskTable } from "../models/task.model.js";
 
 const createTask = (req, res) => {

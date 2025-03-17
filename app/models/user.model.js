@@ -40,6 +40,10 @@ const userTable = {
         parms.push(email);
       }
       let response = await db.get(sqlQuery, parms);
+      if (response == null) {
+        return { msg: "User not avilable" };
+      }
+
       return response;
     } catch (error) {
       return error;

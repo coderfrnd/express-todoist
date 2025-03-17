@@ -7,9 +7,9 @@ const commentCreation = async (db, numOfComment, batchSize) => {
       let params = [];
       for (let j = 0; j < batchSize && index + j < numOfComment; j++) {
         batchValues.push("(?,?,?)");
-        let idOfProjectOrTask = Math.floor(Math.random() * 10000000) + 1;
+        let idOfProjectOrTask = Math.floor(Math.random() * 10000) + 1;
         params.push(`comment ${index + j}`);
-        if (idOfProjectOrTask <= 1000000) {
+        if (idOfProjectOrTask % 2 == 0) {
           params.push(idOfProjectOrTask);
           params.push(null);
         } else {
