@@ -13,5 +13,5 @@ userRouter.get("/", authMiddleware, getAllUser);
 userRouter.get("/any", authMiddleware, getUserByIdNameEmail);
 userRouter.post("/login", login);
 userRouter.post("/register", createUser);
-userRouter.delete("/delete/:id", deleteById);
+userRouter.delete("/delete/:id", authMiddleware, deleteById);
 export { userRouter };
