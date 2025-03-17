@@ -40,14 +40,15 @@ CREATE TABLE IF NOT EXISTS projectTable (
   is_favorite BOOLEAN DEFAULT FALSE,
   colour VARCHAR(256),
   user_id INTEGER ,
-  FOREIGN KEY (user_id) REFERENCES userTable(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES usersTable(id) ON DELETE CASCADE
 )
 `;
 let userTable = `
-CREATE TABLE IF NOT EXISTS userTable(
+CREATE TABLE IF NOT EXISTS usersTable(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT UNIQUE NOT NULL,
-email TEXT UNIQUE NOT NULL
+email TEXT UNIQUE NOT NULL,
+password TEXT NOT NULL
 )
 `;
 // taskCreation

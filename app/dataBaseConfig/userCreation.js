@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 const insertUsers = async (db, n, batchSize = 500) => {
   try {
     await db.run("BEGIN TRANSACTION");
@@ -5,10 +6,14 @@ const insertUsers = async (db, n, batchSize = 500) => {
       let batchValues = [];
       let params = [];
       for (let j = 0; j < batchSize && i + j < n; j++) {
-        batchValues.push("(?, ?)");
-        params.push(`User ${i + j}`, `user${i + j}@example.com`);
+        let name = `User${i + j}`;
+        let email = `user${i + j}@example.com`;
+        let plainPassword = `password(${i + j})`;
+        let hashedPassword = await bcrypt.hash(plainPassword, 10);
+        batchValues.push("(?, ?, ?)");
+        params.push(name, email, hashedPassword);
       }
-      let sqlQuery = `INSERT INTO userTable (name, email) VALUES ${batchValues.join(
+      let sqlQuery = `INSERT INTO usersTable (name, email,password) VALUES ${batchValues.join(
         ", "
       )}`;
       await db.run(sqlQuery, params);

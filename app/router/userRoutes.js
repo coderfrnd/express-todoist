@@ -4,12 +4,14 @@ import {
   deleteById,
   getAllUser,
   getUserByIdNameEmail,
+  login,
 } from "../controllers/user.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 const userRouter = express.Router();
 
-userRouter.get("/", getAllUser);
-userRouter.get("/any", getUserByIdNameEmail);
-userRouter.post("/create", createUser);
+userRouter.get("/", authMiddleware, getAllUser);
+userRouter.get("/any", authMiddleware, getUserByIdNameEmail);
+userRouter.post("/login", login);
+userRouter.post("/register", createUser);
 userRouter.delete("/delete/:id", deleteById);
-// userRouter
 export { userRouter };
